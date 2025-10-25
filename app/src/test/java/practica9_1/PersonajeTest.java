@@ -16,6 +16,11 @@ class PersonajeConcreto extends Personaje {
     }
 
     @Override
+    public String toConfigString() {
+        return "Personaje " + nombre + " " + posicion.getRenglon() + " " + posicion.getColumna();
+    }
+
+    @Override
     public Posicion getPosicion() {
         return posicion;
     }

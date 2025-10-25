@@ -22,4 +22,9 @@ public class Bomba extends Elemento implements Destruible {
     public Posicion getPosicion() {
         return posicion;
     }
+
+    @Override
+    public String toConfigString() {
+        return "Bomba " + posicion.getRenglon() + " " + posicion.getColumna() + " " + radio;
+    }
 }

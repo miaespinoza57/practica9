@@ -1,94 +1,108 @@
 package practica9_1;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
+
+// Clase concreta de prueba para poder instanciar Elemento
+class ElementoConcreto extends Elemento {
+    public ElementoConcreto(Escenario escenario, Posicion posicion) {
+        super(escenario, posicion);
+    }
+
+    @Override
+    protected Posicion getPosicion() {
+        return super.posicion;
+    }
+
+    @Override
+    protected String toConfigString() {
+        return "ElementoConcreto " + posicion.getRenglon() + " " + posicion.getColumna();
+    }
+}
 
 public class ElementoTest {
 
-    @Test
-    public void testJerarquiaElemento() {
-        Escenario escenario = new Escenario("Test Jerarquía");
-        Posicion pos = new Posicion(5, 5);
+    private Escenario escenario;
+    private ElementoConcreto elemento;
+    private Posicion posicion;
 
-        // Test con Roca
-        Roca roca = new Roca(escenario, pos);
-        assertTrue(roca instanceof Elemento);
-        assertEquals(5, roca.getPosition().getRenglon());
-        assertEquals(5, roca.getPosition().getColumna());
-
-        // Test con Terricola
-        Terricola terricola = new Terricola("Soldado", escenario, pos);
-        assertTrue(terricola instanceof Elemento);
-        assertEquals(5, terricola.getPosition().getRenglon());
-        assertEquals(5, terricola.getPosition().getColumna());
-
-        // Test con Extraterrestre
-        Extraterrestre alien = new Extraterrestre("Alien", escenario, pos);
-        assertTrue(alien instanceof Elemento);
-        assertEquals(5, alien.getPosition().getRenglon());
-        assertEquals(5, alien.getPosition().getColumna());
+    @BeforeEach
+    void setUp() {
+        escenario = new Escenario("Test");
+        posicion = new Posicion(3, 5);
+        elemento = new ElementoConcreto(escenario, posicion);
     }
 
     @Test
-    public void testPolimorfismoConElemento() {
-        Escenario escenario = new Escenario("Test Polimorfismo");
-        Posicion pos = new Posicion(3, 3);
-
-        Elemento roca = new Roca(escenario, pos);
-        Elemento terricola = new Terricola("Soldado", escenario, pos);
-        Elemento alien = new Extraterrestre("Alien", escenario, pos);
-
-        // Todos responden a getPosition()
-        assertEquals(3, roca.getPosition().getRenglon());
-        assertEquals(3, terricola.getPosition().getRenglon());
-        assertEquals(3, alien.getPosition().getRenglon());
-
-        // Todos pueden cambiar posición
-        Posicion nuevaPos = new Posicion(7, 7);
-        roca.setPosicion(nuevaPos);
-        terricola.setPosicion(nuevaPos);
-        alien.setPosicion(nuevaPos);
-
-        assertEquals(7, roca.getPosition().getRenglon());
-        assertEquals(7, terricola.getPosition().getRenglon());
-        assertEquals(7, alien.getPosition().getRenglon());
+    void testCreacionElemento() {
+        assertNotNull(elemento);
+        assertSame(escenario, elemento.escenario); // protected field accessible in same package
     }
 
     @Test
-    public void testDiferentesImplementacionesGetPosicion() {
-        Escenario escenario = new Escenario("Test");
-        Posicion pos = new Posicion(2, 2);
+    void testGetPosicion() {
+        Posicion posicionObtenida = elemento.getPosicion();
 
-        Roca roca = new Roca(escenario, pos);
-        Terricola terricola = new Terricola("Soldado", escenario, pos);
-        Extraterrestre alien = new Extraterrestre("Alien", escenario, pos);
-
-        // Todas las clases hijas implementan getPosicion() correctamente
-        assertNotNull(roca.getPosicion());
-        assertNotNull(terricola.getPosicion());
-        assertNotNull(alien.getPosicion());
-
-        assertEquals(2, roca.getPosicion().getRenglon());
-        assertEquals(2, terricola.getPosicion().getRenglon());
-        assertEquals(2, alien.getPosicion().getRenglon());
+        assertNotNull(posicionObtenida);
+        assertEquals(3, posicionObtenida.getRenglon());
+        assertEquals(5, posicionObtenida.getColumna());
+        assertSame(posicion, posicionObtenida);
     }
 
     @Test
-    public void testElementoEnEscenario() {
-        Escenario escenario = new Escenario("Test");
+    void testSetPosicion() {
+        Posicion nuevaPosicion = new Posicion(7, 2);
+        elemento.setPosicion(nuevaPosicion);
 
-        Elemento roca = new Roca(escenario, new Posicion(1, 1));
-        Elemento terricola = new Terricola("Soldado", escenario, new Posicion(2, 2));
-        Elemento alien = new Extraterrestre("Alien", escenario, new Posicion(3, 3));
+        Posicion posicionActualizada = elemento.getPosicion();
+        assertEquals(7, posicionActualizada.getRenglon());
+        assertEquals(2, posicionActualizada.getColumna());
+        assertSame(nuevaPosicion, posicionActualizada);
+    }
 
-        // Todos pueden ser agregados al escenario
-        escenario.agregarElemento(roca);
-        escenario.agregarElemento(terricola);
-        escenario.agregarElemento(alien);
+    @Test
+    void testToConfigString() {
+        String configString = elemento.toConfigString();
 
-        String representacion = escenario.toString();
-        assertTrue(representacion.contains("R ")); // Roca
-        assertTrue(representacion.contains("T ")); // Terricola
-        assertTrue(representacion.contains("E ")); // Extraterrestre
+        assertNotNull(configString);
+        assertTrue(configString.contains("ElementoConcreto"));
+        assertTrue(configString.contains("3"));
+        assertTrue(configString.contains("5"));
+        assertEquals("ElementoConcreto 3 5", configString);
+    }
+
+    @Test
+    void testGetPosition() {
+        // Test del método público getPosition()
+        Posicion pos = elemento.getPosition();
+
+        assertNotNull(pos);
+        assertEquals(3, pos.getRenglon());
+        assertEquals(5, pos.getColumna());
+    }
+
+    @Test
+    void testSetPosicionConNull() {
+        // Test para verificar comportamiento con posición null
+        elemento.setPosicion(null);
+
+        assertNull(elemento.getPosicion());
+    }
+
+    @Test
+    void testElementoConDiferentesPosiciones() {
+        // Test con diferentes valores de posición
+        Posicion[] posiciones = {
+                new Posicion(0, 0),
+                new Posicion(9, 9),
+                new Posicion(5, 5)
+        };
+
+        for (Posicion pos : posiciones) {
+            ElementoConcreto elem = new ElementoConcreto(escenario, pos);
+            assertEquals(pos.getRenglon(), elem.getPosicion().getRenglon());
+            assertEquals(pos.getColumna(), elem.getPosicion().getColumna());
+        }
     }
 }

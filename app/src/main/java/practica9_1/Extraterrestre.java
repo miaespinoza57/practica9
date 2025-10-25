@@ -15,4 +15,9 @@ public class Extraterrestre extends Personaje {
     public Posicion getPosicion() {
         return posicion;
     }
+
+    @Override
+    public String toConfigString() {
+        return "Extraterrestre " + posicion.getRenglon() + " " + posicion.getColumna();
+    }
 }

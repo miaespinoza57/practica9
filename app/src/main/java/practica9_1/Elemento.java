@@ -20,4 +20,6 @@ public abstract class Elemento {
 
     protected abstract Posicion getPosicion();
 
+    protected abstract String toConfigString();
+
 }

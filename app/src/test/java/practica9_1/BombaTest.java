@@ -1,35 +1,34 @@
 package practica9_1;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 public class BombaTest {
-    @Test
-    void testDestruir() {
-        Escenario escenario = new Escenario("Prueba");
-        Posicion pos = new Posicion(0, 0);
-        Bomba bomba = new Bomba(escenario, pos, 5);
-
-        assertEquals("Bomba destruida", bomba.destruir());
-    }
 
     @Test
-    void testExplotar() {
-        Escenario escenario = new Escenario("Prueba");
-        Posicion pos = new Posicion(0, 0);
-        Bomba bomba = new Bomba(escenario, pos, 3);
+    public void testBomba() {
+        // Crear escenario de prueba
+        Escenario escenario = new Escenario("Test");
+        Posicion pos = new Posicion(4, 5);
 
-        // Solo comprobamos que no lance excepción
-        bomba.explotar();
-    }
+        // Crear Bomba con radio 2
+        Bomba b = new Bomba(escenario, pos, 2);
 
-    @Test
-    void testGetPosicion() {
-        Escenario escenario = new Escenario("Prueba");
-        Posicion pos = new Posicion(1, 2);
-        Bomba bomba = new Bomba(escenario, pos, 4);
+        // 1️⃣ Verificar posición
+        assertEquals(4, b.getPosicion().getRenglon());
+        assertEquals(5, b.getPosicion().getColumna());
 
-        assertEquals(pos, bomba.getPosicion());
+        // 2️⃣ Verificar radio
+        assertEquals("Bomba 4 5 2", b.toConfigString());
+
+        // 3️⃣ Verificar destruir
+        assertEquals("Bomba destruida", b.destruir());
+
+        // 4️⃣ Verificar que explotar no lanza excepción
+        try {
+            b.explotar();
+        } catch (Exception e) {
+            fail("El método explotar() lanzó una excepción:" + e.getMessage());
+        }
     }
 }

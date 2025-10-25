@@ -1,14 +1,17 @@
 package practica9_1;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Escenario {
     private String nombre;
     private Elemento[][] campoDeBatalla;
+    private List<Elemento> elementos; // lista para todos los elementos
 
     public Escenario(String nombre) {
         this.nombre = nombre;
         campoDeBatalla = new Elemento[10][10];
+        elementos = new ArrayList<>(); // inicializar la lista
     }
 
     public void agregarElemento(Elemento e) {
@@ -17,7 +20,20 @@ public class Escenario {
         int col = p.getColumna();
         if (fila >= 0 && fila < 10 && col >= 0 && col < 10) {
             campoDeBatalla[fila][col] = e;
+            elementos.add(e); // guardar en la lista también
         }
+    }
+
+    public List<Elemento> getElementos() {
+        return elementos; // permite iterar desde main
+    }
+
+    public List<String> generarConfiguracion() {
+        List<String> lineas = new ArrayList<>();
+        for (Elemento e : elementos) {
+            lineas.add(e.toConfigString()); // cada elemento sabe cómo escribirse
+        }
+        return lineas;
     }
 
     public void destruirElementos(Posicion centro, int radio) {
@@ -39,6 +55,7 @@ public class Escenario {
                 System.out.println(((Destruible) e).destruir());
                 Posicion p = e.getPosicion();
                 campoDeBatalla[p.getRenglon()][p.getColumna()] = null;
+                elementos.remove(e); // también quitar de la lista
             }
         }
     }

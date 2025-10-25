@@ -9,4 +9,9 @@ public class Roca extends Elemento {
     public Posicion getPosicion() {
         return posicion;
     }
+
+    @Override
+    public String toConfigString() {
+        return "Roca " + posicion.getRenglon() + " " + posicion.getColumna();
+    }
 }

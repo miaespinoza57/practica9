@@ -15,4 +15,9 @@ public class Terricola extends Personaje {
     public Posicion getPosicion() {
         return posicion;
     }
+
+    @Override
+    public String toConfigString() {
+        return "Terricola " + posicion.getRenglon() + " " + posicion.getColumna();
+    }
 }
